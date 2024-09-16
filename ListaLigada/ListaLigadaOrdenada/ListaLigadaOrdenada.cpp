@@ -8,6 +8,7 @@ struct NO {
 };
 
 NO* primeiro = NULL;
+NO* ultimo = NULL;
 
 // headers
 void menu();
@@ -116,27 +117,81 @@ void inserirElemento()
 {
 	// aloca memoria dinamicamente para o novo elemento
 	NO* novo = (NO*)malloc(sizeof(NO));
-	if (novo == NULL)
-	{
-		return;
-	}
-
+	int valorDigitado;
+	bool inserido = false;
 	cout << "Digite o elemento: ";
-	cin >> novo->valor;
-	novo->prox = NULL;
+	cin >> valorDigitado;
 
 	if (primeiro == NULL)
 	{
+		novo->valor = valorDigitado;
+		novo->prox = NULL;
 		primeiro = novo;
+		ultimo = novo;
+		bool inserido = true;
+		return;
 	}
 	else
 	{
-		// procura o final da lista
 		NO* aux = primeiro;
+		bool igual = false;
 		while (aux->prox != NULL) {
+			if (aux->valor == valorDigitado) {
+				igual = true;
+			}
 			aux = aux->prox;
+		} 
+
+		if (igual == true) {
+			cout << "O elemento digitado ja existe na lista atual." << endl;
+			return;
 		}
-		aux->prox = novo;
+		else {
+			aux = primeiro;
+			novo->valor = valorDigitado;
+			novo->prox = NULL;
+			NO* auxAnterior = NULL;
+
+			do {
+				if (primeiro->valor == ultimo->valor) {
+					if (aux->valor > novo->valor) {
+						novo->prox = aux;
+						primeiro = novo;
+						inserido = true;
+						return;
+					}
+					else {
+						aux->prox = novo;
+						inserido = true;
+						return;
+					}
+				}
+				else {
+					if (aux->valor > novo->valor) {
+						if (auxAnterior != NULL) {
+							auxAnterior->prox = novo;
+							novo->prox = aux;
+							inserido = true;
+							return;
+						}
+						else {
+							novo->prox = aux;
+							primeiro = novo;	
+							inserido = true;
+							return;
+						}
+					}
+					else {	
+						auxAnterior = aux;
+						aux = aux->prox;
+						return;
+					}
+				}
+			} while (aux->prox != NULL);
+			if (inserido = false) {
+				aux->prox = novo;
+			}
+		}
 	}
 }
 
